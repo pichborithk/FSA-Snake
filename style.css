@@ -1,0 +1,34 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f8f5e4;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+tbody {
+  border: 1px solid #fff;
+}
+
+td {
+  width: 40px;
+  height: 40px;
+  background-color: #f7c04a;
+}
+
+tr:nth-of-type(odd) > td:nth-of-type(even),
+tr:nth-of-type(even) > td:nth-of-type(odd) {
+  background-color: #3f497f;
+}
