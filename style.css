@@ -18,7 +18,7 @@ table {
   border-spacing: 0;
 }
 
-tbody {
+#board {
   border: 1px solid #fff;
 }
 
@@ -31,4 +31,12 @@ td {
 tr:nth-of-type(odd) > td:nth-of-type(even),
 tr:nth-of-type(even) > td:nth-of-type(odd) {
   background-color: #3f497f;
+}
+
+tbody > tr > td.column.snake {
+  background-color: #539165 !important;
+}
+
+tbody > tr > td.column.apple {
+  background-color: #df2e38 !important;
 }
