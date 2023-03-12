@@ -22,13 +22,16 @@ const board = document.querySelector('#board');
 let gameStart;
 
 function renderSnake(snake) {
-  const allSquare = board.querySelectorAll('.column');
-  allSquare.forEach((square) => square.classList.remove('snake'));
+  if (checkGameOver()) return;
+  const allSquare = board.querySelectorAll('.snake');
+  allSquare.forEach((square) => square.remove());
   snake.body.forEach((part) => {
     const snakePart = board.querySelector(
       `[data-index='${part.row}'] > [data-index='${part.column}']`
     );
-    snakePart.classList.add('snake');
+    const div = document.createElement('div');
+    div.className = 'snake';
+    snakePart.appendChild(div);
   });
 }
 
@@ -36,7 +39,9 @@ function renderApple(apple) {
   const appleSquare = board.querySelector(
     `[data-index='${apple.row}'] > [data-index='${apple.column}']`
   );
-  appleSquare.classList.add('apple');
+  const div = document.createElement('div');
+  div.className = 'apple';
+  appleSquare.appendChild(div);
 }
 
 function buildInitialState() {
@@ -47,61 +52,61 @@ function buildInitialState() {
 buildInitialState();
 
 function moveRight() {
-  if (snake.body[snake.body.length - 1].column >= 10) {
-    clearInterval(gameStart);
-    return;
-  }
   snake.nextDirection = {
     row: snake.body[snake.body.length - 1].row,
     column: snake.body[snake.body.length - 1].column + 1,
   };
   snake.body.push({ ...snake.nextDirection });
   snake.body.shift();
+  if (checkGameOver()) {
+    clearInterval(gameStart);
+    return;
+  }
   renderSnake(snake);
   snake.nextDirection.column++;
 }
 
 function moveLeft() {
-  if (snake.body[snake.body.length - 1].column <= 0) {
-    clearInterval(gameStart);
-    return;
-  }
   snake.nextDirection = {
     row: snake.body[snake.body.length - 1].row,
     column: snake.body[snake.body.length - 1].column - 1,
   };
   snake.body.push({ ...snake.nextDirection });
   snake.body.shift();
+  if (checkGameOver()) {
+    clearInterval(gameStart);
+    return;
+  }
   renderSnake(snake);
   snake.nextDirection.column--;
 }
 
 function moveDown() {
-  if (snake.body[snake.body.length - 1].row >= 10) {
-    clearInterval(gameStart);
-    return;
-  }
   snake.nextDirection = {
     row: snake.body[snake.body.length - 1].row + 1,
     column: snake.body[snake.body.length - 1].column,
   };
   snake.body.push({ ...snake.nextDirection });
   snake.body.shift();
+  if (checkGameOver()) {
+    clearInterval(gameStart);
+    return;
+  }
   renderSnake(snake);
   snake.nextDirection.row++;
 }
 
 function moveUp() {
-  if (snake.body[snake.body.length - 1].row <= 0) {
-    clearInterval(gameStart);
-    return;
-  }
   snake.nextDirection = {
     row: snake.body[snake.body.length - 1].row - 1,
     column: snake.body[snake.body.length - 1].column,
   };
   snake.body.push({ ...snake.nextDirection });
   snake.body.shift();
+  if (checkGameOver()) {
+    clearInterval(gameStart);
+    return;
+  }
   renderSnake(snake);
   snake.nextDirection.row--;
 }
@@ -109,21 +114,39 @@ function moveUp() {
 function move(event) {
   switch (event.key) {
     case 'ArrowRight':
+      moveRight();
       clearInterval(gameStart);
       gameStart = setInterval(moveRight, gameState.difficulty);
       break;
     case 'ArrowLeft':
+      moveLeft();
       clearInterval(gameStart);
       gameStart = setInterval(moveLeft, gameState.difficulty);
       break;
     case 'ArrowUp':
+      moveUp();
       clearInterval(gameStart);
       gameStart = setInterval(moveUp, gameState.difficulty);
       break;
     case 'ArrowDown':
+      moveDown();
       clearInterval(gameStart);
       gameStart = setInterval(moveDown, gameState.difficulty);
       break;
+  }
+}
+
+function checkGameOver() {
+  if (
+    snake.body[snake.body.length - 1].row > 10 ||
+    snake.body[snake.body.length - 1].row <= 0 ||
+    snake.body[snake.body.length - 1].column > 10 ||
+    snake.body[snake.body.length - 1].column <= 0
+  ) {
+    console.log('Game Over');
+    return true;
+  } else {
+    return false;
   }
 }
 
