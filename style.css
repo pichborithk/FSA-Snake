@@ -18,17 +18,37 @@ table {
   border-spacing: 0;
 }
 
-tbody {
+#board {
   border: 1px solid #fff;
+}
+
+tr {
+  display: flex;
 }
 
 td {
   width: 40px;
   height: 40px;
   background-color: #f7c04a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 tr:nth-of-type(odd) > td:nth-of-type(even),
 tr:nth-of-type(even) > td:nth-of-type(odd) {
   background-color: #3f497f;
+}
+
+tbody > tr > td > .snake {
+  background-color: #539165;
+  width: 100%;
+  height: 100%;
+}
+
+tbody > tr > td > .apple {
+  background-color: #df2e38;
+  height: 80%;
+  width: 80%;
+  border-radius: 50%;
 }
