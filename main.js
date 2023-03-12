@@ -15,7 +15,7 @@ const hard = 100;
 let gameState = {
   apple: { row: 6, column: 7 },
   snake: snake,
-  difficulty: hard,
+  difficulty: easy,
 };
 
 const board = document.querySelector('#board');
@@ -57,7 +57,7 @@ function moveRight() {
     column: snake.body[snake.body.length - 1].column + 1,
   };
   snake.body.push({ ...snake.nextDirection });
-  snake.body.shift();
+  eatApple();
   if (checkGameOver()) {
     clearInterval(gameStart);
     return;
@@ -72,7 +72,7 @@ function moveLeft() {
     column: snake.body[snake.body.length - 1].column - 1,
   };
   snake.body.push({ ...snake.nextDirection });
-  snake.body.shift();
+  eatApple();
   if (checkGameOver()) {
     clearInterval(gameStart);
     return;
@@ -87,7 +87,7 @@ function moveDown() {
     column: snake.body[snake.body.length - 1].column,
   };
   snake.body.push({ ...snake.nextDirection });
-  snake.body.shift();
+  eatApple();
   if (checkGameOver()) {
     clearInterval(gameStart);
     return;
@@ -102,7 +102,7 @@ function moveUp() {
     column: snake.body[snake.body.length - 1].column,
   };
   snake.body.push({ ...snake.nextDirection });
-  snake.body.shift();
+  eatApple();
   if (checkGameOver()) {
     clearInterval(gameStart);
     return;
@@ -141,7 +141,9 @@ function checkGameOver() {
     snake.body[snake.body.length - 1].row > 10 ||
     snake.body[snake.body.length - 1].row <= 0 ||
     snake.body[snake.body.length - 1].column > 10 ||
-    snake.body[snake.body.length - 1].column <= 0
+    snake.body[snake.body.length - 1].column <= 0 ||
+    (snake.body[snake.body.length - 1].column === snake.body[0].column &&
+      snake.body[snake.body.length - 1].row === snake.body[0].row)
   ) {
     console.log('Game Over');
     return true;
@@ -150,9 +152,38 @@ function checkGameOver() {
   }
 }
 
-// let gameStart = setInterval(moveRight, 1000);
+function eatApple() {
+  if (
+    !(
+      snake.body[snake.body.length - 1].column === gameState.apple.column &&
+      snake.body[snake.body.length - 1].row === gameState.apple.row
+    )
+  ) {
+    snake.body.shift();
+  } else {
+    console.log('apple');
+    board.querySelector('.apple').remove();
+    makeNewApple();
+    renderApple(gameState.apple);
+  }
+}
+
+function makeNewApple() {
+  gameState.apple.row = Math.floor(Math.random() * 10 + 1);
+  gameState.apple.column = Math.floor(Math.random() * 10 + 1);
+  console.log(gameState.apple);
+  const isUnable = gameState.snake.body.some((part) => {
+    return (
+      part.row === gameState.apple.row && part.column === gameState.apple.column
+    );
+  });
+  if (isUnable) {
+    console.log('no');
+    makeNewApple();
+  }
+}
+
 document.addEventListener('keydown', move);
-// document.addEventListener('keydown', moveRight);
 
 function renderState() {
   setInterval();
