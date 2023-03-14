@@ -1,190 +1,160 @@
-let snake = {
-  body: [
-    { row: 1, column: 1 },
-    { row: 1, column: 2 },
-    { row: 1, column: 3 },
-    { row: 1, column: 4 },
-  ],
-  nextDirection: { row: 1, column: 5 },
-};
-
-const easy = 500;
-const normal = 300;
-const hard = 100;
-
-let gameState = {
-  apple: { row: 6, column: 7 },
-  snake: snake,
-  difficulty: easy,
-};
-
-const board = document.querySelector('#board');
-let gameStart;
+let snake = gameState.snake;
+let apple = gameState.apple;
+let difficulty = gameState.difficulty;
+let axis;
+let running = true;
 
 function renderSnake(snake) {
-  if (checkGameOver()) return;
+  if (!running) return;
   const allSquare = board.querySelectorAll('.snake');
-  allSquare.forEach((square) => square.remove());
+  allSquare.forEach((square) => square.classList.remove('snake'));
   snake.body.forEach((part) => {
     const snakePart = board.querySelector(
-      `[data-index='${part.row}'] > [data-index='${part.column}']`
+      `[data-index='${part.row}'] > [data-index='${part.column}'] > div`
     );
-    const div = document.createElement('div');
-    div.className = 'snake';
-    snakePart.appendChild(div);
+    snakePart.className = 'snake';
   });
 }
 
 function renderApple(apple) {
   const appleSquare = board.querySelector(
-    `[data-index='${apple.row}'] > [data-index='${apple.column}']`
+    `[data-index='${apple.row}'] > [data-index='${apple.column}'] > div`
   );
-  const div = document.createElement('div');
-  div.className = 'apple';
-  appleSquare.appendChild(div);
+  appleSquare.className = 'apple';
 }
 
 function buildInitialState() {
-  renderSnake(gameState.snake);
-  renderApple(gameState.apple);
+  renderSnake(snake);
+  renderApple(apple);
 }
 
 buildInitialState();
 
 function moveRight() {
-  snake.nextDirection = {
-    row: snake.body[snake.body.length - 1].row,
-    column: snake.body[snake.body.length - 1].column + 1,
-  };
+  let snakeHead = snake.body[snake.body.length - 1];
+  snake.nextDirection.row = snakeHead.row;
+  snake.nextDirection.column = snakeHead.column + 1;
   snake.body.push({ ...snake.nextDirection });
   eatApple();
-  if (checkGameOver()) {
-    clearInterval(gameStart);
-    return;
-  }
+  checkGameOver();
+  if (!running) return;
   renderSnake(snake);
-  snake.nextDirection.column++;
+  axis = 'horizontal';
 }
 
 function moveLeft() {
-  snake.nextDirection = {
-    row: snake.body[snake.body.length - 1].row,
-    column: snake.body[snake.body.length - 1].column - 1,
-  };
+  let snakeHead = snake.body[snake.body.length - 1];
+  snake.nextDirection.row = snakeHead.row;
+  snake.nextDirection.column = snakeHead.column - 1;
   snake.body.push({ ...snake.nextDirection });
   eatApple();
   if (checkGameOver()) {
-    clearInterval(gameStart);
+    clearInterval(running);
     return;
   }
   renderSnake(snake);
-  snake.nextDirection.column--;
+  axis = 'horizontal';
 }
 
 function moveDown() {
-  snake.nextDirection = {
-    row: snake.body[snake.body.length - 1].row + 1,
-    column: snake.body[snake.body.length - 1].column,
-  };
+  let snakeHead = snake.body[snake.body.length - 1];
+  snake.nextDirection.row = snakeHead.row + 1;
+  snake.nextDirection.column = snakeHead.column;
   snake.body.push({ ...snake.nextDirection });
   eatApple();
   if (checkGameOver()) {
-    clearInterval(gameStart);
+    clearInterval(running);
     return;
   }
   renderSnake(snake);
-  snake.nextDirection.row++;
+  axis = 'vertical';
 }
 
 function moveUp() {
-  snake.nextDirection = {
-    row: snake.body[snake.body.length - 1].row - 1,
-    column: snake.body[snake.body.length - 1].column,
-  };
+  let snakeHead = snake.body[snake.body.length - 1];
+  snake.nextDirection.row = snakeHead.row - 1;
+  snake.nextDirection.column = snakeHead.column;
   snake.body.push({ ...snake.nextDirection });
   eatApple();
   if (checkGameOver()) {
-    clearInterval(gameStart);
+    clearInterval(running);
     return;
   }
   renderSnake(snake);
-  snake.nextDirection.row--;
+  axis = 'vertical';
 }
 
 function move(event) {
+  if (!running) return;
   switch (event.key) {
     case 'ArrowRight':
+      if (axis === 'horizontal') return;
       moveRight();
-      clearInterval(gameStart);
-      gameStart = setInterval(moveRight, gameState.difficulty);
+      clearInterval(running);
+      running = setInterval(moveRight, difficulty);
       break;
     case 'ArrowLeft':
+      if (axis === 'horizontal') return;
       moveLeft();
-      clearInterval(gameStart);
-      gameStart = setInterval(moveLeft, gameState.difficulty);
+      clearInterval(running);
+      running = setInterval(moveLeft, difficulty);
       break;
     case 'ArrowUp':
+      if (axis === 'vertical') return;
       moveUp();
-      clearInterval(gameStart);
-      gameStart = setInterval(moveUp, gameState.difficulty);
+      clearInterval(running);
+      running = setInterval(moveUp, difficulty);
       break;
     case 'ArrowDown':
+      if (axis === 'vertical') return;
       moveDown();
-      clearInterval(gameStart);
-      gameStart = setInterval(moveDown, gameState.difficulty);
+      clearInterval(running);
+      running = setInterval(moveDown, difficulty);
       break;
   }
 }
 
 function checkGameOver() {
+  let snakeHead = snake.body[snake.body.length - 1];
+  let snakeTail = snake.body.slice(0, -1);
   if (
-    snake.body[snake.body.length - 1].row > 10 ||
-    snake.body[snake.body.length - 1].row <= 0 ||
-    snake.body[snake.body.length - 1].column > 10 ||
-    snake.body[snake.body.length - 1].column <= 0 ||
-    (snake.body[snake.body.length - 1].column === snake.body[0].column &&
-      snake.body[snake.body.length - 1].row === snake.body[0].row)
+    snakeHead.row > 10 ||
+    snakeHead.row <= 0 ||
+    snakeHead.column > 10 ||
+    snakeHead.column <= 0 ||
+    snakeTail.some(
+      (part) => part.column === snakeHead.column && part.row === snakeHead.row
+    )
   ) {
+    clearInterval(running);
     console.log('Game Over');
-    return true;
-  } else {
-    return false;
+    running = false;
   }
 }
 
 function eatApple() {
-  if (
-    !(
-      snake.body[snake.body.length - 1].column === gameState.apple.column &&
-      snake.body[snake.body.length - 1].row === gameState.apple.row
-    )
-  ) {
+  let snakeHead = snake.body[snake.body.length - 1];
+  if (!(snakeHead.column === apple.column && snakeHead.row === apple.row)) {
     snake.body.shift();
   } else {
-    console.log('apple');
-    board.querySelector('.apple').remove();
+    board.querySelector('.apple').classList.remove('apple');
     makeNewApple();
-    renderApple(gameState.apple);
+    renderApple(apple);
+    console.log(snake.body.length);
   }
 }
 
 function makeNewApple() {
-  gameState.apple.row = Math.floor(Math.random() * 10 + 1);
-  gameState.apple.column = Math.floor(Math.random() * 10 + 1);
-  console.log(gameState.apple);
-  const isUnable = gameState.snake.body.some((part) => {
-    return (
-      part.row === gameState.apple.row && part.column === gameState.apple.column
-    );
+  apple.row = Math.floor(Math.random() * 10 + 1);
+  apple.column = Math.floor(Math.random() * 10 + 1);
+  console.log(apple);
+  const isAvailable = snake.body.some((part) => {
+    return part.row === apple.row && part.column === apple.column;
   });
-  if (isUnable) {
+  if (isAvailable) {
     console.log('no');
     makeNewApple();
   }
 }
 
 document.addEventListener('keydown', move);
-
-function renderState() {
-  setInterval();
-}
