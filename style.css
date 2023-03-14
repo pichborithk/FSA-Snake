@@ -8,13 +8,22 @@ body {
   background-color: #f8f5e4;
   height: 100vh;
   width: 100vw;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+main {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-button {
+main > button {
   margin-bottom: 20px;
   font-size: 32px;
   padding: 5px 10px;
@@ -22,13 +31,14 @@ button {
   color: #f8f5e4;
   border: none;
   box-shadow: 1px 1px 10px #000;
+  cursor: pointer;
 }
 
-button:active {
+main > button:hover {
   background-color: #f7c04a;
 }
 
-button:focus {
+main > button:focus {
   outline: none;
 }
 
@@ -71,4 +81,46 @@ tbody > tr > td > .apple {
   height: 80%;
   width: 80%;
   border-radius: 50%;
+}
+
+.banner {
+  position: absolute;
+  transform: translateY(5000%);
+  transition: all 1s ease-in-out;
+  width: 70%;
+  height: 30%;
+  background-color: #fff;
+  border: 3px double #539165;
+  outline: 3px double #539165;
+  outline-offset: 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2px;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.banner.game-over {
+  transform: translateY(0);
+  transition: all 0.4s ease-in-out;
+}
+
+.banner > button {
+  margin-top: 50px;
+  font-family: 'Press Start 2P', cursive;
+  padding: 10px 20px;
+  background-color: transparent;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px #616161;
+}
+
+.banner > button:hover {
+  background-color: #539165;
+  color: #fff;
+  cursor: pointer;
+}
+
+main.game-over {
+  filter: blur(5px);
 }
