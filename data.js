@@ -1,9 +1,4 @@
-const easy = 500;
-const normal = 300;
-const hard = 100;
-
-let gameState = {
-  apple: { row: 6, column: 7 },
+let gameInitialState = {
   snake: {
     body: [
       { row: 1, column: 1 },
@@ -13,18 +8,31 @@ let gameState = {
     ],
     nextDirection: { row: 1, column: 5 },
   },
-  difficulty: easy,
+  difficulty: 500,
+  axis: '',
+  isRunning: false,
+  boardSize: 20,
 };
+
+let snake = {};
+snake.body = [...gameInitialState.snake.body];
+snake.nextDirection = { ...gameInitialState.snake.nextDirection };
+let apple = {};
+let difficulty = gameInitialState.difficulty;
+let axis = gameInitialState.axis;
+let isRunning = gameInitialState.isRunning;
+
 const main = document.querySelector('main');
 const board = document.querySelector('#board');
 const startBtn = document.querySelector('#start');
 const bannerGameOver = document.querySelector('.banner');
+const difficultySelect = document.querySelector('#difficulty');
 
-for (let i = 1; i <= 10; i++) {
+for (let i = 1; i <= gameInitialState.boardSize; i++) {
   const row = document.createElement('tr');
   row.className = 'row';
   row.dataset.index = i;
-  for (let j = 1; j <= 10; j++) {
+  for (let j = 1; j <= gameInitialState.boardSize; j++) {
     const td = document.createElement('td');
     td.className = 'column';
     td.dataset.index = j;
