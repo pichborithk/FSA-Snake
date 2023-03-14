@@ -18,6 +18,7 @@ function renderSnake(snake) {
 function renderApple() {
   const lastApple = board.querySelector('.apple');
   if (lastApple) lastApple.classList.remove('apple');
+  makeNewApple();
   const appleSquare = board.querySelector(
     `[data-index='${apple.row}'] > [data-index='${apple.column}'] > div`
   );
@@ -90,7 +91,6 @@ function moveUp() {
 }
 
 function move(event) {
-  if (!running) return;
   switch (event.key) {
     case 'ArrowRight':
       if (axis === 'horizontal') return;
@@ -131,11 +131,24 @@ function checkGameOver() {
       (part) => part.column === snakeHead.column && part.row === snakeHead.row
     )
   ) {
-    clearInterval(running);
-    running = false;
-    alert(`Game Over!!! Your Snake Length is: ${snake.body.length}`);
-    buildInitialState();
+    gameOver();
   }
+}
+
+function gameOver() {
+  clearInterval(running);
+  running = false;
+  axis = '';
+  main.classList.add('game-over');
+  bannerGameOver.querySelector('span').innerText = snake.body.length;
+  bannerGameOver.classList.add('game-over');
+  bannerGameOver.querySelector('button').addEventListener('click', restart);
+}
+
+function restart() {
+  main.classList.remove('game-over');
+  bannerGameOver.classList.remove('game-over');
+  buildInitialState();
 }
 
 function eatApple() {
@@ -143,7 +156,6 @@ function eatApple() {
   if (!(snakeHead.column === apple.column && snakeHead.row === apple.row)) {
     snake.body.shift();
   } else {
-    makeNewApple();
     renderApple();
     console.log(snake.body.length);
   }
