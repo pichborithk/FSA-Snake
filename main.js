@@ -1,18 +1,21 @@
-let snake = gameState.snake;
-let apple = gameState.apple;
-let difficulty = gameState.difficulty;
-let axis;
-let running = false;
-
-function renderSnake(snake) {
+function renderSnake() {
   const lastSnake = board.querySelectorAll('.snake');
-  lastSnake.forEach((part) => part.classList.remove('snake'));
+  lastSnake.forEach((part) => (part.className = ''));
   snake.body.forEach((part) => {
     const snakePart = board.querySelector(
       `[data-index='${part.row}'] > [data-index='${part.column}'] > div`
     );
     snakePart.className = 'snake';
   });
+  let snakeHeadObject = snake.body[snake.body.length - 1];
+  const snakeHead = board.querySelector(
+    `[data-index='${snakeHeadObject.row}'] > [data-index='${snakeHeadObject.column}'] > .snake`
+  );
+  if (axis === 'vertical') {
+    snakeHead.classList.add('head-vertical');
+  } else {
+    snakeHead.classList.add('head-horizontal');
+  }
 }
 
 function renderApple() {
@@ -26,21 +29,9 @@ function renderApple() {
 }
 
 function buildInitialState() {
-  apple = { row: 6, column: 7 };
-  snake = {
-    body: [
-      { row: 1, column: 1 },
-      { row: 1, column: 2 },
-      { row: 1, column: 3 },
-      { row: 1, column: 4 },
-    ],
-    nextDirection: { row: 1, column: 5 },
-  };
-  renderSnake(snake);
-  renderApple(apple);
+  renderSnake();
+  renderApple();
 }
-
-buildInitialState();
 
 function moveRight() {
   let snakeHead = snake.body[snake.body.length - 1];
@@ -49,9 +40,9 @@ function moveRight() {
   snake.body.push({ ...snake.nextDirection });
   eatApple();
   checkGameOver();
-  if (!running) return;
-  renderSnake(snake);
+  if (!isRunning) return;
   axis = 'horizontal';
+  renderSnake();
 }
 
 function moveLeft() {
@@ -61,9 +52,9 @@ function moveLeft() {
   snake.body.push({ ...snake.nextDirection });
   eatApple();
   checkGameOver();
-  if (!running) return;
-  renderSnake(snake);
+  if (!isRunning) return;
   axis = 'horizontal';
+  renderSnake();
 }
 
 function moveDown() {
@@ -73,9 +64,9 @@ function moveDown() {
   snake.body.push({ ...snake.nextDirection });
   eatApple();
   checkGameOver();
-  if (!running) return;
-  renderSnake(snake);
+  if (!isRunning) return;
   axis = 'vertical';
+  renderSnake();
 }
 
 function moveUp() {
@@ -85,9 +76,9 @@ function moveUp() {
   snake.body.push({ ...snake.nextDirection });
   eatApple();
   checkGameOver();
-  if (!running) return;
-  renderSnake(snake);
+  if (!isRunning) return;
   axis = 'vertical';
+  renderSnake();
 }
 
 function move(event) {
@@ -95,26 +86,26 @@ function move(event) {
     case 'ArrowRight':
       if (axis === 'horizontal') return;
       moveRight();
-      clearInterval(running);
-      running = setInterval(moveRight, difficulty);
+      clearInterval(isRunning);
+      isRunning = setInterval(moveRight, difficulty);
       break;
     case 'ArrowLeft':
       if (axis === 'horizontal') return;
       moveLeft();
-      clearInterval(running);
-      running = setInterval(moveLeft, difficulty);
+      clearInterval(isRunning);
+      isRunning = setInterval(moveLeft, difficulty);
       break;
     case 'ArrowUp':
       if (axis === 'vertical') return;
       moveUp();
-      clearInterval(running);
-      running = setInterval(moveUp, difficulty);
+      clearInterval(isRunning);
+      isRunning = setInterval(moveUp, difficulty);
       break;
     case 'ArrowDown':
       if (axis === 'vertical') return;
       moveDown();
-      clearInterval(running);
-      running = setInterval(moveDown, difficulty);
+      clearInterval(isRunning);
+      isRunning = setInterval(moveDown, difficulty);
       break;
   }
 }
@@ -123,9 +114,9 @@ function checkGameOver() {
   let snakeHead = snake.body[snake.body.length - 1];
   let snakeTail = snake.body.slice(0, -1);
   if (
-    snakeHead.row > 10 ||
+    snakeHead.row > gameInitialState.boardSize ||
     snakeHead.row <= 0 ||
-    snakeHead.column > 10 ||
+    snakeHead.column > gameInitialState.boardSize ||
     snakeHead.column <= 0 ||
     snakeTail.some(
       (part) => part.column === snakeHead.column && part.row === snakeHead.row
@@ -136,11 +127,13 @@ function checkGameOver() {
 }
 
 function gameOver() {
-  clearInterval(running);
-  running = false;
+  clearInterval(isRunning);
+  isRunning = false;
   axis = '';
+  startBtn.disabled = false;
+  difficultySelect.disabled = false;
   main.classList.add('game-over');
-  bannerGameOver.querySelector('span').innerText = snake.body.length;
+  bannerGameOver.querySelector('h3 > span').innerText = snake.body.length;
   bannerGameOver.classList.add('game-over');
   bannerGameOver.querySelector('button').addEventListener('click', restart);
 }
@@ -148,6 +141,8 @@ function gameOver() {
 function restart() {
   main.classList.remove('game-over');
   bannerGameOver.classList.remove('game-over');
+  snake.body = [...gameInitialState.snake.body];
+  snake.nextDirection = { ...gameInitialState.snake.nextDirection };
   buildInitialState();
 }
 
@@ -162,9 +157,8 @@ function eatApple() {
 }
 
 function makeNewApple() {
-  apple.row = Math.floor(Math.random() * 10 + 1);
-  apple.column = Math.floor(Math.random() * 10 + 1);
-  console.log(apple);
+  apple.row = Math.floor(Math.random() * gameInitialState.boardSize + 1);
+  apple.column = Math.floor(Math.random() * gameInitialState.boardSize + 1);
   const isAvailable = snake.body.some((part) => {
     return part.row === apple.row && part.column === apple.column;
   });
@@ -174,10 +168,26 @@ function makeNewApple() {
   }
 }
 
-document.addEventListener('keydown', move);
+function handleDifficulty(event) {
+  difficulty = Number(event.target.value);
+  console.log(difficulty);
+}
+
+buildInitialState();
+
+document.addEventListener('keydown', function (event) {
+  if (!isRunning) {
+    startBtn.disabled = true;
+    difficultySelect.disabled = true;
+  }
+  move(event);
+});
 startBtn.addEventListener('click', function () {
-  if (!running) {
+  if (!isRunning) {
+    startBtn.disabled = true;
+    difficultySelect.disabled = true;
     moveRight();
-    running = setInterval(moveRight, difficulty);
+    isRunning = setInterval(moveRight, difficulty);
   }
 });
+difficultySelect.addEventListener('change', handleDifficulty);
