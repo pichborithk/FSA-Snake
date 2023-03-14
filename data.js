@@ -15,9 +15,10 @@ let gameState = {
   },
   difficulty: easy,
 };
-
+const main = document.querySelector('main');
 const board = document.querySelector('#board');
 const startBtn = document.querySelector('#start');
+const bannerGameOver = document.querySelector('.banner');
 
 for (let i = 1; i <= 10; i++) {
   const row = document.createElement('tr');

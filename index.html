@@ -5,14 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P"
+      rel="stylesheet"
+    />
     <script type="text/javascript" src="./data.js" defer></script>
     <script type="text/javascript" src="./main.js" defer></script>
     <title>Snake</title>
   </head>
   <body>
-    <button id="start">START</button>
-    <table>
-      <tbody id="board"></tbody>
-    </table>
+    <main>
+      <button id="start">START</button>
+      <table>
+        <tbody id="board"></tbody>
+      </table>
+    </main>
+    <div class="banner">
+      <h3>Game Over!!! Your Snake Length is: <span></span></h3>
+      <button>Try Again ?</button>
+    </div>
   </body>
 </html>
