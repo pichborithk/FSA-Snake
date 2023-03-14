@@ -17,6 +17,7 @@ let gameState = {
 };
 
 const board = document.querySelector('#board');
+const startBtn = document.querySelector('#start');
 
 for (let i = 1; i <= 10; i++) {
   const row = document.createElement('tr');

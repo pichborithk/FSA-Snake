@@ -2,12 +2,11 @@ let snake = gameState.snake;
 let apple = gameState.apple;
 let difficulty = gameState.difficulty;
 let axis;
-let running = true;
+let running = false;
 
 function renderSnake(snake) {
-  if (!running) return;
-  const allSquare = board.querySelectorAll('.snake');
-  allSquare.forEach((square) => square.classList.remove('snake'));
+  const lastSnake = board.querySelectorAll('.snake');
+  lastSnake.forEach((part) => part.classList.remove('snake'));
   snake.body.forEach((part) => {
     const snakePart = board.querySelector(
       `[data-index='${part.row}'] > [data-index='${part.column}'] > div`
@@ -16,7 +15,9 @@ function renderSnake(snake) {
   });
 }
 
-function renderApple(apple) {
+function renderApple() {
+  const lastApple = board.querySelector('.apple');
+  if (lastApple) lastApple.classList.remove('apple');
   const appleSquare = board.querySelector(
     `[data-index='${apple.row}'] > [data-index='${apple.column}'] > div`
   );
@@ -24,6 +25,16 @@ function renderApple(apple) {
 }
 
 function buildInitialState() {
+  apple = { row: 6, column: 7 };
+  snake = {
+    body: [
+      { row: 1, column: 1 },
+      { row: 1, column: 2 },
+      { row: 1, column: 3 },
+      { row: 1, column: 4 },
+    ],
+    nextDirection: { row: 1, column: 5 },
+  };
   renderSnake(snake);
   renderApple(apple);
 }
@@ -48,10 +59,8 @@ function moveLeft() {
   snake.nextDirection.column = snakeHead.column - 1;
   snake.body.push({ ...snake.nextDirection });
   eatApple();
-  if (checkGameOver()) {
-    clearInterval(running);
-    return;
-  }
+  checkGameOver();
+  if (!running) return;
   renderSnake(snake);
   axis = 'horizontal';
 }
@@ -62,10 +71,8 @@ function moveDown() {
   snake.nextDirection.column = snakeHead.column;
   snake.body.push({ ...snake.nextDirection });
   eatApple();
-  if (checkGameOver()) {
-    clearInterval(running);
-    return;
-  }
+  checkGameOver();
+  if (!running) return;
   renderSnake(snake);
   axis = 'vertical';
 }
@@ -76,10 +83,8 @@ function moveUp() {
   snake.nextDirection.column = snakeHead.column;
   snake.body.push({ ...snake.nextDirection });
   eatApple();
-  if (checkGameOver()) {
-    clearInterval(running);
-    return;
-  }
+  checkGameOver();
+  if (!running) return;
   renderSnake(snake);
   axis = 'vertical';
 }
@@ -127,8 +132,9 @@ function checkGameOver() {
     )
   ) {
     clearInterval(running);
-    console.log('Game Over');
     running = false;
+    alert(`Game Over!!! Your Snake Length is: ${snake.body.length}`);
+    buildInitialState();
   }
 }
 
@@ -137,9 +143,8 @@ function eatApple() {
   if (!(snakeHead.column === apple.column && snakeHead.row === apple.row)) {
     snake.body.shift();
   } else {
-    board.querySelector('.apple').classList.remove('apple');
     makeNewApple();
-    renderApple(apple);
+    renderApple();
     console.log(snake.body.length);
   }
 }
@@ -158,3 +163,9 @@ function makeNewApple() {
 }
 
 document.addEventListener('keydown', move);
+startBtn.addEventListener('click', function () {
+  if (!running) {
+    moveRight();
+    running = setInterval(moveRight, difficulty);
+  }
+});
