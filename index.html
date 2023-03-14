@@ -5,133 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./style.css" />
+    <script type="text/javascript" src="./data.js" defer></script>
     <script type="text/javascript" src="./main.js" defer></script>
     <title>Snake</title>
   </head>
   <body>
+    <button id="start">START</button>
     <table>
-      <tbody id="board">
-        <tr class="row" data-index="1">
-          <td class="column" data-index="1"></td>
-          <td class="column" data-index="2"></td>
-          <td class="column" data-index="3"></td>
-          <td class="column" data-index="4"></td>
-          <td class="column" data-index="5"></td>
-          <td class="column" data-index="6"></td>
-          <td class="column" data-index="7"></td>
-          <td class="column" data-index="8"></td>
-          <td class="column" data-index="9"></td>
-          <td class="column" data-index="10"></td>
-        </tr>
-        <tr class="row" data-index="2">
-          <td class="column" data-index="1"></td>
-          <td class="column" data-index="2"></td>
-          <td class="column" data-index="3"></td>
-          <td class="column" data-index="4"></td>
-          <td class="column" data-index="5"></td>
-          <td class="column" data-index="6"></td>
-          <td class="column" data-index="7"></td>
-          <td class="column" data-index="8"></td>
-          <td class="column" data-index="9"></td>
-          <td class="column" data-index="10"></td>
-        </tr>
-        <tr class="row" data-index="3">
-          <td class="column" data-index="1"></td>
-          <td class="column" data-index="2"></td>
-          <td class="column" data-index="3"></td>
-          <td class="column" data-index="4"></td>
-          <td class="column" data-index="5"></td>
-          <td class="column" data-index="6"></td>
-          <td class="column" data-index="7"></td>
-          <td class="column" data-index="8"></td>
-          <td class="column" data-index="9"></td>
-          <td class="column" data-index="10"></td>
-        </tr>
-        <tr class="row" data-index="4">
-          <td class="column" data-index="1"></td>
-          <td class="column" data-index="2"></td>
-          <td class="column" data-index="3"></td>
-          <td class="column" data-index="4"></td>
-          <td class="column" data-index="5"></td>
-          <td class="column" data-index="6"></td>
-          <td class="column" data-index="7"></td>
-          <td class="column" data-index="8"></td>
-          <td class="column" data-index="9"></td>
-          <td class="column" data-index="10"></td>
-        </tr>
-        <tr class="row" data-index="5">
-          <td class="column" data-index="1"></td>
-          <td class="column" data-index="2"></td>
-          <td class="column" data-index="3"></td>
-          <td class="column" data-index="4"></td>
-          <td class="column" data-index="5"></td>
-          <td class="column" data-index="6"></td>
-          <td class="column" data-index="7"></td>
-          <td class="column" data-index="8"></td>
-          <td class="column" data-index="9"></td>
-          <td class="column" data-index="10"></td>
-        </tr>
-        <tr class="row" data-index="6">
-          <td class="column" data-index="1"></td>
-          <td class="column" data-index="2"></td>
-          <td class="column" data-index="3"></td>
-          <td class="column" data-index="4"></td>
-          <td class="column" data-index="5"></td>
-          <td class="column" data-index="6"></td>
-          <td class="column" data-index="7"></td>
-          <td class="column" data-index="8"></td>
-          <td class="column" data-index="9"></td>
-          <td class="column" data-index="10"></td>
-        </tr>
-        <tr class="row" data-index="7">
-          <td class="column" data-index="1"></td>
-          <td class="column" data-index="2"></td>
-          <td class="column" data-index="3"></td>
-          <td class="column" data-index="4"></td>
-          <td class="column" data-index="5"></td>
-          <td class="column" data-index="6"></td>
-          <td class="column" data-index="7"></td>
-          <td class="column" data-index="8"></td>
-          <td class="column" data-index="9"></td>
-          <td class="column" data-index="10"></td>
-        </tr>
-        <tr class="row" data-index="8">
-          <td class="column" data-index="1"></td>
-          <td class="column" data-index="2"></td>
-          <td class="column" data-index="3"></td>
-          <td class="column" data-index="4"></td>
-          <td class="column" data-index="5"></td>
-          <td class="column" data-index="6"></td>
-          <td class="column" data-index="7"></td>
-          <td class="column" data-index="8"></td>
-          <td class="column" data-index="9"></td>
-          <td class="column" data-index="10"></td>
-        </tr>
-        <tr class="row" data-index="9">
-          <td class="column" data-index="1"></td>
-          <td class="column" data-index="2"></td>
-          <td class="column" data-index="3"></td>
-          <td class="column" data-index="4"></td>
-          <td class="column" data-index="5"></td>
-          <td class="column" data-index="6"></td>
-          <td class="column" data-index="7"></td>
-          <td class="column" data-index="8"></td>
-          <td class="column" data-index="9"></td>
-          <td class="column" data-index="10"></td>
-        </tr>
-        <tr class="row" data-index="10">
-          <td class="column" data-index="1"></td>
-          <td class="column" data-index="2"></td>
-          <td class="column" data-index="3"></td>
-          <td class="column" data-index="4"></td>
-          <td class="column" data-index="5"></td>
-          <td class="column" data-index="6"></td>
-          <td class="column" data-index="7"></td>
-          <td class="column" data-index="8"></td>
-          <td class="column" data-index="9"></td>
-          <td class="column" data-index="10"></td>
-        </tr>
-      </tbody>
+      <tbody id="board"></tbody>
     </table>
   </body>
 </html>
