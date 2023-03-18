@@ -69,6 +69,7 @@ main > section > select:focus {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+  margin-bottom: 20px;
 }
 
 #board {
@@ -129,7 +130,6 @@ tbody > tr > td > .apple {
 section > h2 {
   color: #539165;
   width: 200px;
-  margin-top: 20px;
   border: 1px solid #539165;
   display: flex;
   justify-content: space-between;

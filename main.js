@@ -1,21 +1,28 @@
 function renderSnake() {
   const lastSnake = board.querySelectorAll('.snake');
   lastSnake.forEach((part) => (part.className = ''));
-  snake.body.forEach((part) => {
+  snake.body.forEach((part, i) => {
     const snakePart = board.querySelector(
       `[data-index='${part.row}'] > [data-index='${part.column}'] > div`
     );
     snakePart.className = 'snake';
+    if (i === snake.body.length - 1) {
+      if (axis === 'vertical') {
+        snakePart.classList.add('head-vertical');
+      } else {
+        snakePart.classList.add('head-horizontal');
+      }
+    }
   });
-  let snakeHeadObject = snake.body[snake.body.length - 1];
-  const snakeHead = board.querySelector(
-    `[data-index='${snakeHeadObject.row}'] > [data-index='${snakeHeadObject.column}'] > .snake`
-  );
-  if (axis === 'vertical') {
-    snakeHead.classList.add('head-vertical');
-  } else {
-    snakeHead.classList.add('head-horizontal');
-  }
+  // let snakeHeadObject = snake.body[snake.body.length - 1];
+  // const snakeHead = board.querySelector(
+  //   `[data-index='${snakeHeadObject.row}'] > [data-index='${snakeHeadObject.column}'] > .snake`
+  // );
+  // if (axis === 'vertical') {
+  //   snakeHead.classList.add('head-vertical');
+  // } else {
+  //   snakeHead.classList.add('head-horizontal');
+  // }
 }
 
 function renderApple() {
@@ -49,8 +56,9 @@ function eatApple() {
 }
 
 function renderPointsDisplay() {
-  document.querySelector('#avg').innerText = averagePoints;
-  document.querySelector('#best').innerText = bestPoints;
+  averagePointsDisplay.innerText = averagePoints;
+  bestPointsDisplay.innerText = bestPoints;
+  currentPointsDisplay.innerText = currentPoints;
 }
 
 function makeNewApple() {
