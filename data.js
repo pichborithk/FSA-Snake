@@ -34,6 +34,7 @@ const bannerGameOver = document.querySelector('.banner');
 const difficultySelect = document.querySelector('#difficulty');
 const averagePointsDisplay = document.querySelector('#avg');
 const bestPointsDisplay = document.querySelector('#best');
+const currentPointsDisplay = document.querySelector('#current-points');
 
 for (let i = 1; i <= gameInitialState.boardSize; i++) {
   const row = document.createElement('tr');
