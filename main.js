@@ -1,21 +1,28 @@
 function renderSnake() {
   const lastSnake = board.querySelectorAll('.snake');
   lastSnake.forEach((part) => (part.className = ''));
-  snake.body.forEach((part) => {
+  snake.body.forEach((part, i) => {
     const snakePart = board.querySelector(
       `[data-index='${part.row}'] > [data-index='${part.column}'] > div`
     );
     snakePart.className = 'snake';
+    if (i === snake.body.length - 1) {
+      if (axis === 'vertical') {
+        snakePart.classList.add('head-vertical');
+      } else {
+        snakePart.classList.add('head-horizontal');
+      }
+    }
   });
-  let snakeHeadObject = snake.body[snake.body.length - 1];
-  const snakeHead = board.querySelector(
-    `[data-index='${snakeHeadObject.row}'] > [data-index='${snakeHeadObject.column}'] > .snake`
-  );
-  if (axis === 'vertical') {
-    snakeHead.classList.add('head-vertical');
-  } else {
-    snakeHead.classList.add('head-horizontal');
-  }
+  // let snakeHeadObject = snake.body[snake.body.length - 1];
+  // const snakeHead = board.querySelector(
+  //   `[data-index='${snakeHeadObject.row}'] > [data-index='${snakeHeadObject.column}'] > .snake`
+  // );
+  // if (axis === 'vertical') {
+  //   snakeHead.classList.add('head-vertical');
+  // } else {
+  //   snakeHead.classList.add('head-horizontal');
+  // }
 }
 
 function renderApple() {
@@ -28,9 +35,49 @@ function renderApple() {
   appleSquare.className = 'apple';
 }
 
+function eatApple() {
+  let snakeHead = snake.body[snake.body.length - 1];
+  if (!(snakeHead.column === apple.column && snakeHead.row === apple.row)) {
+    snake.body.shift();
+  } else {
+    renderApple();
+    currentPoints += applePoints;
+    bestPoints = bestPoints > currentPoints ? bestPoints : currentPoints;
+    averagePoints =
+      pointsHistory.length < 1
+        ? currentPoints
+        : Math.floor(
+            (currentPoints + pointsHistory.reduce((a, b) => a + b)) /
+              (pointsHistory.length + 1)
+          );
+    renderPointsDisplay();
+    applePoints = 50;
+  }
+}
+
+function renderPointsDisplay() {
+  averagePointsDisplay.innerText = averagePoints;
+  bestPointsDisplay.innerText = bestPoints;
+  currentPointsDisplay.innerText = currentPoints;
+}
+
+function makeNewApple() {
+  apple.row = Math.floor(Math.random() * gameInitialState.boardSize + 1);
+  apple.column = Math.floor(Math.random() * gameInitialState.boardSize + 1);
+  const isAvailable = snake.body.some((part) => {
+    return part.row === apple.row && part.column === apple.column;
+  });
+  if (isAvailable) {
+    console.log('no');
+    makeNewApple();
+  }
+}
+
 function buildInitialState() {
   renderSnake();
   renderApple();
+  currentPoints = 0;
+  console.log(pointsHistory);
 }
 
 function moveRight() {
@@ -38,6 +85,7 @@ function moveRight() {
   snake.nextDirection.row = snakeHead.row;
   snake.nextDirection.column = snakeHead.column + 1;
   snake.body.push({ ...snake.nextDirection });
+  if (applePoints > 10) applePoints--;
   eatApple();
   checkGameOver();
   if (!isRunning) return;
@@ -50,6 +98,7 @@ function moveLeft() {
   snake.nextDirection.row = snakeHead.row;
   snake.nextDirection.column = snakeHead.column - 1;
   snake.body.push({ ...snake.nextDirection });
+  if (applePoints > 10) applePoints--;
   eatApple();
   checkGameOver();
   if (!isRunning) return;
@@ -62,6 +111,7 @@ function moveDown() {
   snake.nextDirection.row = snakeHead.row + 1;
   snake.nextDirection.column = snakeHead.column;
   snake.body.push({ ...snake.nextDirection });
+  if (applePoints > 10) applePoints--;
   eatApple();
   checkGameOver();
   if (!isRunning) return;
@@ -74,6 +124,7 @@ function moveUp() {
   snake.nextDirection.row = snakeHead.row - 1;
   snake.nextDirection.column = snakeHead.column;
   snake.body.push({ ...snake.nextDirection });
+  if (applePoints > 10) applePoints--;
   eatApple();
   checkGameOver();
   if (!isRunning) return;
@@ -133,7 +184,8 @@ function gameOver() {
   startBtn.disabled = false;
   difficultySelect.disabled = false;
   main.classList.add('game-over');
-  bannerGameOver.querySelector('h3 > span').innerText = snake.body.length;
+  bannerGameOver.querySelector('#length').innerText = snake.body.length;
+  bannerGameOver.querySelector('#point').innerText = currentPoints;
   bannerGameOver.classList.add('game-over');
   bannerGameOver.querySelector('button').addEventListener('click', restart);
 }
@@ -143,29 +195,8 @@ function restart() {
   bannerGameOver.classList.remove('game-over');
   snake.body = [...gameInitialState.snake.body];
   snake.nextDirection = { ...gameInitialState.snake.nextDirection };
+  pointsHistory.push(currentPoints);
   buildInitialState();
-}
-
-function eatApple() {
-  let snakeHead = snake.body[snake.body.length - 1];
-  if (!(snakeHead.column === apple.column && snakeHead.row === apple.row)) {
-    snake.body.shift();
-  } else {
-    renderApple();
-    console.log(snake.body.length);
-  }
-}
-
-function makeNewApple() {
-  apple.row = Math.floor(Math.random() * gameInitialState.boardSize + 1);
-  apple.column = Math.floor(Math.random() * gameInitialState.boardSize + 1);
-  const isAvailable = snake.body.some((part) => {
-    return part.row === apple.row && part.column === apple.column;
-  });
-  if (isAvailable) {
-    console.log('no');
-    makeNewApple();
-  }
 }
 
 function handleDifficulty(event) {
