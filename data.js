@@ -21,12 +21,19 @@ let apple = {};
 let difficulty = gameInitialState.difficulty;
 let axis = gameInitialState.axis;
 let isRunning = gameInitialState.isRunning;
+let currentPoints = 0;
+let bestPoints = 0;
+let averagePoints = 0;
+let pointsHistory = [];
+let applePoints = 50;
 
 const main = document.querySelector('main');
 const board = document.querySelector('#board');
 const startBtn = document.querySelector('#start');
 const bannerGameOver = document.querySelector('.banner');
 const difficultySelect = document.querySelector('#difficulty');
+const averagePointsDisplay = document.querySelector('#avg');
+const bestPointsDisplay = document.querySelector('#best');
 
 for (let i = 1; i <= gameInitialState.boardSize; i++) {
   const row = document.createElement('tr');

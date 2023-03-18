@@ -33,7 +33,7 @@ main > section {
 }
 
 main > section > button {
-  font-size: 32px;
+  font-size: 24px;
   padding: 5px 15px;
   background-color: #539165;
   border: none;
@@ -57,7 +57,7 @@ main > section > button:disabled {
 }
 
 main > section > select {
-  font-size: 32px;
+  font-size: 24px;
   padding: 5px 15px;
   background-color: #539165;
 }
@@ -81,9 +81,9 @@ tr {
 }
 
 td {
-  width: 40px;
-  height: 40px;
-  background-color: #f7c04a;
+  width: 30px;
+  height: 30px;
+  background-color: #fab219;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -91,7 +91,7 @@ td {
 
 tr:nth-of-type(odd) > td:nth-of-type(even),
 tr:nth-of-type(even) > td:nth-of-type(odd) {
-  background-color: #3f497f;
+  background-color: #8b8b8b;
 }
 
 tbody > tr > td > .snake {
@@ -124,6 +124,21 @@ tbody > tr > td > .apple {
   height: 80%;
   width: 80%;
   border-radius: 50%;
+}
+
+section > h2 {
+  color: #539165;
+  width: 200px;
+  margin-top: 20px;
+  border: 1px solid #539165;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+}
+
+section > h2 > span {
+  color: #539165;
 }
 
 .banner {
